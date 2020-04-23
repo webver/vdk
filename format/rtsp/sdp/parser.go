@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/deepch/vdk/av"
+	"github.com/webver/vdk/av"
 )
 
 type Session struct {
@@ -47,6 +47,8 @@ func Parse(content string) (sess Session, medias []Media) {
 						if len(mfields) >= 3 {
 							media.PayloadType, _ = strconv.Atoi(mfields[2])
 						}
+					default:
+						media = nil
 					}
 				}
 
