@@ -6,10 +6,10 @@ import (
 	"io"
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/codec/aacparser"
-	"github.com/deepch/vdk/codec/h264parser"
-	"github.com/deepch/vdk/format/mp4/mp4io"
+	"github.com/webver/vdk/av"
+	"github.com/webver/vdk/codec/aacparser"
+	"github.com/webver/vdk/codec/h264parser"
+	"github.com/webver/vdk/format/mp4/mp4io"
 )
 
 type Demuxer struct {

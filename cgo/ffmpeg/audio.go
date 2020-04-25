@@ -17,9 +17,9 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/av/avutil"
-	"github.com/deepch/vdk/codec/aacparser"
+	"github.com/webver/vdk/av"
+	"github.com/webver/vdk/av/avutil"
+	"github.com/webver/vdk/codec/aacparser"
 )
 
 const debug = false

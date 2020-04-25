@@ -3,8 +3,8 @@ package codec
 import (
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/codec/fake"
+	"github.com/webver/vdk/av"
+	"github.com/webver/vdk/codec/fake"
 )
 
 type PCMUCodecData struct {

@@ -3,8 +3,8 @@ package ts
 import (
 	"io"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/av/avutil"
+	"github.com/webver/vdk/av"
+	"github.com/webver/vdk/av/avutil"
 )
 
 func Handler(h *avutil.RegisterHandler) {
