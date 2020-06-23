@@ -1,6 +1,7 @@
 package ts
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -154,6 +155,9 @@ func (self *Muxer) WriteHeader(streams []av.CodecData) (err error) {
 }
 
 func (self *Muxer) WritePacket(pkt av.Packet) (err error) {
+	if int(pkt.Idx) >= len(self.streams) {
+		return errors.New("wrong stream index")
+	}
 	stream := self.streams[pkt.Idx]
 	pkt.Time += time.Second
 
