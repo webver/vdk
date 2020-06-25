@@ -1,7 +1,6 @@
 package ts
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -16,7 +15,7 @@ var CodecTypes = []av.CodecType{av.H264, av.AAC}
 
 type Muxer struct {
 	w                        io.Writer
-	streams                  []*Stream
+	streams                  map[int]*Stream
 	PaddingToMakeCounterCont bool
 
 	psidata []byte
@@ -43,7 +42,7 @@ func NewMuxer(w io.Writer) *Muxer {
 	}
 }
 
-func (self *Muxer) newStream(codec av.CodecData) (err error) {
+func (self *Muxer) newStream(idx int, codec av.CodecData) (err error) {
 	ok := false
 	for _, c := range CodecTypes {
 		if codec.Type() == c {
@@ -56,14 +55,14 @@ func (self *Muxer) newStream(codec av.CodecData) (err error) {
 		return
 	}
 
-	pid := uint16(len(self.streams) + 0x100)
+	pid := uint16(idx + 0x100)
 	stream := &Stream{
 		muxer:     self,
 		CodecData: codec,
 		pid:       pid,
 		tsw:       tsio.NewTSWriter(pid),
 	}
-	self.streams = append(self.streams, stream)
+	self.streams[idx] = stream
 	return
 }
 
@@ -141,10 +140,10 @@ func (self *Muxer) WritePATPMT() (err error) {
 }
 
 func (self *Muxer) WriteHeader(streams []av.CodecData) (err error) {
-	self.streams = []*Stream{}
-	for _, stream := range streams {
-		if err = self.newStream(stream); err != nil {
-			return
+	self.streams = map[int]*Stream{}
+	for idx, stream := range streams {
+		if err = self.newStream(idx, stream); err != nil {
+			fmt.Println(err)
 		}
 	}
 
@@ -155,10 +154,13 @@ func (self *Muxer) WriteHeader(streams []av.CodecData) (err error) {
 }
 
 func (self *Muxer) WritePacket(pkt av.Packet) (err error) {
-	if int(pkt.Idx) >= len(self.streams) {
-		return errors.New("wrong stream index")
+	var stream *Stream = nil
+	if v, ok := self.streams[int(pkt.Idx)]; !ok {
+		return //unsupported stream, just skip it
+	} else {
+		stream = v
 	}
-	stream := self.streams[pkt.Idx]
+
 	pkt.Time += time.Second
 
 	switch stream.Type() {
