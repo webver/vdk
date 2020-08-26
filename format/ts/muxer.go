@@ -3,6 +3,7 @@ package ts
 import (
 	"fmt"
 	"io"
+	"sync"
 	"time"
 
 	"github.com/webver/vdk/av"
@@ -16,6 +17,7 @@ var CodecTypes = []av.CodecType{av.H264, av.AAC}
 type Muxer struct {
 	w                        io.Writer
 	streams                  map[int]*Stream
+	mutex                    sync.Mutex
 	PaddingToMakeCounterCont bool
 
 	psidata []byte
@@ -62,6 +64,9 @@ func (self *Muxer) newStream(idx int, codec av.CodecData) (err error) {
 		pid:       pid,
 		tsw:       tsio.NewTSWriter(pid),
 	}
+
+	defer self.mutex.Unlock()
+	self.mutex.Lock()
 	self.streams[idx] = stream
 	return
 }

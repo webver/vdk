@@ -196,7 +196,7 @@ func (self *Client) SendRtpKeepalive() (err error) {
 				fmt.Println("rtp: keep alive")
 			}
 			req := Request{
-				Method: "OPTIONS",
+				Method: "GET_PARAMETER",
 				Uri:    self.requestUri,
 			}
 			if err = self.WriteRequest(req); err != nil {
